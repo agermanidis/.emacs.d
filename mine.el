@@ -3,6 +3,8 @@
 (require 'inf-haskell)
 (require 'pycomplete)
 (require 'ipython)
+(require 'python-automatize)
+(require 'smooth-scrolling)
 
 ;; settings
 
@@ -19,8 +21,6 @@
 (display-time)                                 ; Display time in modeline
 (put 'erase-buffer 'disabled nil)              ; Enable erase-buffer
 (color-theme-blackboard)                       ; Blackboard theme
-
-
 (setq next-line-add-newlines t)
 
 (setq haskell-program-name "/usr/bin/ghci")
@@ -60,57 +60,11 @@
 (defun show-on-the-right (arg-window)
   (interactive)
   (split-window-horizontally)
-  (set-window-buffer (next-window) arg-window))
-
-(defun new-class (name inherits)
-  (interactive "sName of class: \nsInherits: ")
-  (insert (concat "class " name "(" inherits ")"))
-  (insert ":\n    def __init__(self):")
-  (py-newline-and-indent)
-  (insert inherits)
-  (insert ".__init__(self)"))
+  (ido-switch-buffer))
 
 (defun search-buffer (some-string)
   (or (search-forward statement (end-of-buffer) t)
       (search-backward statement (end-of-buffer) t)))
-
-(defun add-import (module)
-  (interactive "sImport: ")
-  (save-excursion 
-    (let ((statement (concat "import " module)))
-      (if (not (or (search-forward statement (end-of-buffer) t)
-                   (search-backward statement (end-of-buffer) t)))
-          (progn
-            (beginning-of-buffer)
-            (newline-and-indent)
-            (previous-line)
-            (beginning-of-line)
-            (insert statement))
-        (message "Already imported")))))
-
-(defun py-main ()
-  (interactive)
-  (end-of-buffer)
-  (insert "\n\n\n\n")
-  (insert "if __name__ == '__main__':")
-  (add-import "sys")
-  (py-newline-and-indent))
-
-(defun pyqt-main ()
-  (interactive)
-  (py-main)
-  (add-import "PyQt4.QtGui")
-  (insert "app = PyQt4.QtGui.QApplication(sys.argv)")
-  (py-newline-and-indent)
-  (insert "app.exec_()"))
-
-(defun py-constructor ()
-  (interactive)
-  (search-backward "def __init__")
-  (py-end-of-def-or-class)
-  (previous-line)
-  (end-of-line)
-  (py-newline-and-indent))
 
 (defun mark-line ()
   (interactive)
@@ -152,6 +106,7 @@
 (global-set-key (kbd "M-'") 'remember-back)
 
 
+
 ;; adding hooks
 
 (add-hook 'haskell-mode-hook 'turn-on-haskell-doc-mode)
@@ -169,6 +124,8 @@
 (setq org-log-done 'time)
 
 (provide 'mine)
+
+
 
 
 

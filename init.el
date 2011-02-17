@@ -82,3 +82,5 @@
 (require 'mine)
 (require 'wc)
 
+
+(put 'narrow-to-region 'disabled nil)
