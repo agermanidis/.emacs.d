@@ -15,9 +15,12 @@
 (defun py-main ()
   (interactive)
   (end-of-buffer)
-  (insert "\n\n\n\n")
+  (insert "\n\n")
+  (insert "logging.basicConfig(level = logging.DEBUG, format ='%(asctime)s %(levelname)s %(message)s')")
+  (insert "\n\n")
   (insert "if __name__ == '__main__':")
   (add-import "sys")
+  (add-import "logging")
   (py-newline-and-indent))
 
 (defun py-main-with-args (desc)
@@ -33,7 +36,6 @@
 ;;                            collect (list (read-from-minibuffer "Next argument: ")
 ;;                                          (read-from-minibuffer "Help: ")
 ;;                                          (read-from-minibuffer "Default: ")))))
-
 ;;   (insert "parser = argparse.ArgumentParser(description='" (concat (pop arguments) "')"))
 ;;   (py-newline-and-indent)
 ;;   (while arguments
@@ -56,10 +58,8 @@
   (insert (concat "class " name "(" inherits ")"))
   (insert ":\n    def __init__(self):")
   (py-newline-and-indent)
-  (insert inherits
-   if (equal inherits "object")
-   ()
-   insert))
+  (if (not (equal inherits "object"))
+      (insert inherits ".__init__(self)")))
 
 
 (defun py-function (name args)

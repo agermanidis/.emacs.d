@@ -20,8 +20,9 @@
 (global-linum-mode 1)                          ; Toggle linum mode
 (display-time)                                 ; Display time in modeline
 (put 'erase-buffer 'disabled nil)              ; Enable erase-buffer
-(color-theme-blackboard)                       ; Blackboard theme
+(color-theme-zenburn)                       ; Blackboard theme
 (setq next-line-add-newlines t)
+
 
 (setq haskell-program-name "/usr/bin/ghci")
 (setq auto-mode-alist (cons '("\\.py$" . python-mode) auto-mode-alist))
@@ -38,7 +39,6 @@
 (autoload 'pymacs-eval "pymacs" nil t)
 (autoload 'pymacs-apply "pymacs")
 (autoload 'pymacs-call "pymacs")
-
 
 (defun save-macro (name)                  
   "save a macro. Take a name as argument
@@ -84,6 +84,35 @@
   (search-forward ")")
   (backward-char))
 
+(defun show-on-browser ()
+  (interactive)
+  (shell-command
+   (concat "google-chrome " (buffer-file-name))))
+
+
+(defun book-view ()
+  (interactive)
+  (delete-other-windows)
+  (beginning-of-buffer)
+  (split-window-horizontally)
+  (scroll-down))
+
+(defun turn-page-forward ()
+  (interactive)
+  (scroll-down)
+  (other-window 1)
+  (scroll-down)
+  (scroll-down)
+  (other-window 1))
+
+(defun turn-page-backward ()
+  (interactive)
+  (scroll-up)
+  (other-window 1)
+  (scroll-up)
+  (scroll-up)
+  (other-window 1))
+
 ;; setting keys
 
 (global-set-key (kbd "C-RET") 'ipython-complete) 
@@ -104,7 +133,7 @@
 (global-set-key "\C-l" 'mark-line)
 (global-set-key (kbd "C-'") 'remember-remember)
 (global-set-key (kbd "M-'") 'remember-back)
-
+(global-set-key "\M-w" 'show-on-browser)
 
 
 ;; adding hooks
@@ -123,7 +152,22 @@
 
 (setq org-log-done 'time)
 
+(require 'js-comint)
+(setq inferior-js-program-command "/usr/bin/java org.mozilla.javascript.tools.shell.Main")
+(add-hook 'js2-mode-hook '(lambda () 
+			    (local-set-key "\C-x\C-e" 'js-send-last-sexp)
+			    (local-set-key "\C-\M-x" 'js-send-last-sexp-and-go)
+			    (local-set-key "\C-cb" 'js-send-buffer)
+			    (local-set-key "\C-c\C-b" 'js-send-buffer-and-go)
+			    (local-set-key "\C-cl" 'js-load-file-and-go)
+			    ))
+
+
+
+
+
 (provide 'mine)
+
 
 
 
